@@ -29,7 +29,7 @@ export default function Header() {
               O nas
             </li>
           </Link>
-          <Link to='/sign-in'>
+          <Link to='/contact'>
             <li className='hidden: sm:inline text-slate-700 hover:underline'>
               Kontakt
             </li>
