@@ -1,7 +1,68 @@
 import React from 'react'
+import { useState } from 'react';
+import { getDownloadURL, getStorage, uploadBytesResumable } from 'firebase/storage';
+import { app } from '../../firebase';
 
 export default function CreateListing() {
-  return (
+    const [files, setFiles] = useState([]);
+    const [formData, setFormData] = useState({
+        imageUrls: [],
+    })
+    const [imageUploadError, setImageUploadError] = (false)
+    const [uploading, setUploading] = (false);
+    
+    const handleImageSubmit = (e) => {
+        if (files.length > 0 ) {
+            const promises = [];
+
+            for (let i = 0; i < files.length; i++) {
+                promises.push(storageItem(files[i]));
+            }
+            Promise.all(promises).then((urls) => {
+                setFormData({
+                    ...formData, imageUrls:
+                    formData.imageUrls.concat(urls)
+                });
+                setImageUploadError(false);
+            }).catch((err) => {
+                setImageUploadError('Nie powiodło się')
+            })
+        }
+    }
+
+    const storeImage = async (file) => {
+        return new Promise((resolve, reject) => {
+            const storage = getStorage(app)
+            const fileName = new Date().getTime() + file.name;
+            const storageRed = ref(storage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+            uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                    const progress =
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log(`Upload is ${progress}% done`);
+                },
+                (error)=>{
+                    reject(error);
+                },
+                ()=>{
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        resolve(downloadURL)
+                    });
+                }
+            );
+        });
+    };
+    handleRemoveImage = (index) => {
+        setFormData({
+            ...formData,
+            imageUrls: formData.imageUrls.filter((_, i) => i !==
+            index),
+        });
+    };
+
+    return (
     <main className='p-3 max-w-4xl mx-auto'>
         <h1 className='text-3xl font-semibold text-center my-7'>CreateListing
         </h1>
@@ -58,13 +119,27 @@ export default function CreateListing() {
                         Pierwsze zdjęcie będzie głownym
                     </span>
                 </p>
-                <div className=''>
-                    <input className='p-3 border-gray-300 rounded w-full' type='file'
+                <div className='flex gap-4'>
+                    <input onChange={(e)=>setFiles(e.target.files)} className='p-3 border-gray-300
+                     rounded w-full' type='file'
                      id='images' accept='image/*' multiple />
-                    <button className='p-3 text-green-700 border-green-700 rounded
+                    <button type='button' onClick={handleImageSubmit} className='p-3 text-green-700
+                     border-green-700 rounded
                      uppercase hover:shadow-lf disabled:opacity-80'
-                    >Prześlij</button>
+                    >
+                        {uploading ? 'Przesyłam...' : 'Prześlij'}
+                    </button>
                 </div>
+                <p className='text-red-700 text-sm'>{imageUploadError && imageUploadError}</p>
+                {
+                    formData.imageUrls.length > 0 && fromData.imageUrls.map((url, index) => (
+                        <div key={url} className='flex justify-between p-3 border items-center'>
+                            <img src={url} alt='listing image' className='w-20 h-20 object-contain rounded-lg' />
+                            <button type='button' onClick={() => handleRemoveImage(index)} className='p-3 text-red-700 rounded-lg
+                             uppercase hover:opacity-75'>Usuń</button>
+                        </div>
+                    ))
+                }
                 <button className='p-3 bg-slate-700 text-white rounded-lg uppercase
                 hover:opacity-95 disabled:opacity-80'>Dodaj ofertę</button>
             </div>
