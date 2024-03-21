@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 export const signin = async (req, res, next) => {
     const { username, password } = req.body;
     try {
-        const validUser = await UserActivation.findOne({ username});
+        const validUser = await User.findOne({ username});
         if (!validUser) return next
             (errorHandler(404), 'User not Found');
         const validPassword = bcryptjs.compareSync(password, validUser.password);
