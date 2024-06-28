@@ -1,0 +1,76 @@
+@use 'variables' as v;
+
+$breakpoints: (
+  'xs': 480px,
+  'sm': 650px,
+  // isMobile in useMediaQuery
+  'md': 768px,
+  'lg': 992px,
+  'xl': 1200px,
+  // isTablet in useMediaQuery
+) !default;
+
+@mixin respond($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (max-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+        + "Available breakpoints are: #{map-keys($breakpoints)}.";
+  }
+}
+
+@mixin flex($gap: 10px, $align: center, $justify: space-between, $direction: row, $wrap: nowrap) {
+  display: flex;
+  gap: $gap;
+  align-items: $align;
+  justify-content: $justify;
+  flex-direction: $direction;
+  flex-wrap: $wrap;
+}
+
+@mixin typography($size: 14px, $height: 17px, $weight: 500, $color: v.$color-text-primary) {
+  font-family: 'Ubuntu';
+  font-size: $size;
+  line-height: $height;
+  font-weight: $weight;
+  color: $color;
+}
+
+@mixin h1 {
+  @include typography(32px, normal, 400, v.$color-text-primary);
+  letter-spacing: 0.32px;
+}
+
+@mixin h2 {
+  @include typography(24px, 34px, 700, v.$color-text-primary);
+}
+
+@mixin h3 {
+  @include typography(18px, normal, 700, v.$color-text-primary);
+}
+
+@mixin h4 {
+  @include typography(16px, 24px, 700, v.$color-text-primary);
+}
+
+@mixin h5 {
+  @include typography(14px, 14px, 700, v.$color-text-primary);
+}
+
+@mixin textBig {
+  @include typography(16px, 26px, 400, v.$color-text-primary);
+}
+
+@mixin textNormal {
+  @include typography(14px, 20px, 400, v.$color-text-primary);
+}
+
+@mixin textSignature1 {
+  @include typography(12px, 17px, 400, v.$color-text-primary);
+}
+
+@mixin textSignature2 {
+  @include typography(10px, 14px, 400, v.$color-text-primary);
+}

@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components": ["src/components/index"],
+      "@pages": ["src/pages/index"],
+      "@store": ["src/store/index"],
+      "@icons": ["src/assets/icons/index"],
+      "@helpers": ["src/helpers/index"],
+      "@hooks": ["src/hooks/index"],
+      "@constants": ["src/constants/index"],
+      "@globalTypes": ["src/globalTypes"],
+      "@services": ["src/services/index"],
+      "@utils": ["src/utils/index"],
+      "@interfaces": ["src/interfaces/index"],
+      "@modules": ["src/modules/index"]
+    }
+  },
+  "include": [".eslintrc.cjs", "vite.config.ts", "i18n.ts", "src"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}
